@@ -43,19 +43,19 @@ public class A_Star
     private const int _costStraight = 10; //직선 이동비용
     private const int _costDiagonal = 14; //대각선 이동비용 : 대각선 이동비용은 피타고라스의 정리에 따라 두 변의 길이가 1일 때 빗변의 길이는 루트2 이므로 1.4 뭐시기가 됨. 여기에 10을 곱해서 14로 사용.
 
-    private int _expandGridRange = 2;
-    private float _sphereRadius = 0.49f;
+    private int _expandGridRange = 2; //추가 범위. 추가 범위를 안넣어주면 현재 지점부터 목표 지점까지 딱붙어서 그리드가 정해짐. 조금 여유있게 찾기위함.
+    private float _sphereRadius = 0.49f; //경로상에 장애물을 판단하는 오버랩 스피어의 반지름. 지름이 1이되어 경계면이 타이트 해지면 잘못된 판정을 할 수 있음. 조금 여유를 주기 위해 0.98f
 
    
 
     public List<Vector3> PathFinding(Transform selfTransform, Transform destination, bool allowDigonal, bool dontCrossCorner)
     {
-        _selfTransform = selfTransform;
+        _selfTransform = selfTransform; //대충 받어...
         _destination = destination;
         _allowDigonal = allowDigonal;
         _dontCrossCorner = dontCrossCorner;
 
-        CreateGrid();
+        CreateGrid(); //그리드를 생성하는 메서드. 
 
         _gridSizeX = _topRight.x - _bottomLeft.x + 1;
         _gridSizeZ = _topRight.y - _bottomLeft.y + 1;
@@ -203,33 +203,33 @@ public class A_Star
     {
         float minX, maxX, minZ, maxZ, temp;
 
-        minX = _selfTransform.position.x;
-        maxX = _destination.position.x;
-        minZ = _selfTransform.position.z;
-        maxZ = _destination.position.z;
+        minX = _selfTransform.position.x; //좌측 하단 좌표(출발지점)
+        maxX = _destination.position.x; //우측 상단 좌표(도착지점)
+        minZ = _selfTransform.position.z; //좌측 하단 좌표(출발지점)
+        maxZ = _destination.position.z; //우측 상단 좌표(도착지점)
 
-        if (_selfTransform.position.x > _destination.position.x)
+        if (_selfTransform.position.x > _destination.position.x) //큰 수, 작은 수 맞춰주기.
         {
             temp = minX;
             minX = maxX;
             maxX = temp;
         }
 
-        if (_selfTransform.position.z > _destination.position.z)
+        if (_selfTransform.position.z > _destination.position.z)// ''
         {
             temp = minZ;
             minZ = maxZ;
             maxZ = temp;
         }
 
-        minX -= _expandGridRange;
+        minX -= _expandGridRange; //확장 작은 수는 - 해서 더 작게 큰 수는 + 해서 더 크게. 
         minZ -= _expandGridRange;
         maxX += _expandGridRange;
         maxZ += _expandGridRange;
 
-        _bottomLeft = new Vector2Int((int)minX, (int)minZ);
-        _topRight = new Vector2Int((int)maxX, (int)maxZ);
-        _startPosition = new Vector2Int((int)_selfTransform.position.x, (int)_selfTransform.position.z);
-        _endPosition = new Vector2Int((int)_destination.position.x, (int)_destination.position.z);
+        _bottomLeft = new Vector2Int((int)minX, (int)minZ); //좌측 하단
+        _topRight = new Vector2Int((int)maxX, (int)maxZ); //우측 상단
+        _startPosition = new Vector2Int((int)_selfTransform.position.x, (int)_selfTransform.position.z); //시작지점
+        _endPosition = new Vector2Int((int)_destination.position.x, (int)_destination.position.z); //도착지점
     }
 }
